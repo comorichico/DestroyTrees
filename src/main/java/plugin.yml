@@ -1,0 +1,8 @@
+name: DestroyTrees
+version: 20230130
+description: DestroyTrees
+author: comorichico
+website: comorichico.com
+api-version: 1.19
+#---
+main: com.comorichico.destroytrees.DestroyTrees
