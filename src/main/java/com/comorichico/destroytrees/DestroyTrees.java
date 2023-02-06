@@ -4,7 +4,9 @@ import net.coreprotect.CoreProtect;
 import net.coreprotect.CoreProtectAPI;
 import java.util.List;
 import net.coreprotect.CoreProtectAPI.ParseResult;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockDamageEvent;
@@ -62,10 +64,32 @@ public class DestroyTrees extends JavaPlugin implements Listener{
             }
         }
         WoodList woodList = new WoodList();
+        Block block = event.getBlock();
+        Location location;
+        int range = 6;
+        int bottom = 5;
+        int top = 20;
+        Block searchBlock;
         for(Material wood: woodList.getWoodList()){
-            if(event.getBlock().getType() == wood){
+            if(block.getType() == wood){
                 if(event.getItemInHand().getType() == Material.WOODEN_AXE){
-                    new DestroyTask(event,10).runTaskTimer(this, 0, 1);
+                    location = block.getLocation();
+                    int x = location.getBlockX();
+                    int y = location.getBlockY();
+                    int z = location.getBlockZ();
+                    block.breakNaturally(event.getItemInHand());
+                    for(int yy = y-bottom; yy <= y+top; yy++){
+                        for(int xx = x-range; xx <= x+range; xx++){
+                            for(int zz = z-range; zz <= z+range; zz++){
+                                searchBlock = event.getPlayer().getWorld().getBlockAt(xx,yy,zz);
+                                for(Material wood2: woodList.getWoodList()){
+                                    if(searchBlock.getType() == wood2){
+                                        searchBlock.breakNaturally(event.getItemInHand());
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
